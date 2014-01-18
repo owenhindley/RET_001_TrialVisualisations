@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<base href="../"/>
+
+	<title>Data Generation Test</title>
+
+	<script src="js/retropi/retropi.js"></script>
+	<script src="js/retropi/utils/ImageAverageAnalyser.js"></script>
+
+	<script>
+
+	var analyser = null;
+
+	document.addEventListener("DOMContentLoaded", function() {
+
+		analyser.analyse("images/uk_city_heat_map.jpg", 64, 100, function() {
+			console.log("analysis complete.");
+
+		})
+				
+
+	});
+
+		
+
+	</script>
+
+	<style>
+	img, canvas {
+		position: absolute;
+		top:50%;
+		left:50%;
+		margin-left:-512px;
+		margin-top:-512px;
+	}
+
+	</style>
+</head>
+<body>
+
+	<img id="srcIMage" src="images/uk_city_heat_map.jpg" width="1024" height="1024"/>
+	<canvas id="debugCanvas" width="1024" height="1024"></canvas>
+
+</body>
+</html>
