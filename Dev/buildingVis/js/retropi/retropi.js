@@ -8,7 +8,7 @@
 		var components = aNamespace.split('.');
 		var namespaceObj = retropi;
 		for (var i=0; i < components.length; i++){
-			if (namespaceObj[components[i]]) namespaceObj[components[i]] = {};
+			if (!namespaceObj[components[i]]) namespaceObj[components[i]] = {};
 			namespaceObj = namespaceObj[components[i]];
 		}
 		return namespaceObj;
@@ -19,7 +19,7 @@
 	retropi.createClass = function(aNamespace, aClassName, aDefinitionFunction){
 
 		var namespace = retropi.getNamespace(aNamespace);
-		namespace[aClassName] = new function() {};
+		namespace[aClassName] = function() {};
 		var classObject = namespace[aClassName];
 		var prototype = namespace[aClassName].prototype;
 

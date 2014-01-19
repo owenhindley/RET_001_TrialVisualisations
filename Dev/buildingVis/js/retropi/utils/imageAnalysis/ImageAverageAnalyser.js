@@ -1,6 +1,6 @@
 (function() {
 	
-	retropi.createClass("utils", "ImageAverageAnalyser", function(aClassObject, aClassPrototype, aClassName){
+	retropi.createClass("utils.imageAnalysis", "ImageAverageAnalyser", function(aClassObject, aClassPrototype, aClassName){
 
 		var p = aClassPrototype;
 
@@ -35,24 +35,54 @@
 				this._analysisCanvas.height = this._sourceImage.height;
 
 				this._analysisCtx.drawImage(this._sourceImage, 0, 0);
+				
+				
+
+				var debugCanvas = document.getElementById("debugCanvas");
+				var ctx = debugCanvas.getContext("2d");
+
+				ctx.strokeStyle = "rgba(255,0,255, 0.5)";
 
 				var imageData = null;
 				var blockAverages = [];
 				var cellAverage = 0;
+				var pixelAverage = 0;
 				var totalAverage = 0;
 				for (var i = 0; i < numCellsDown; i++){
 
 					blockAverages[i] = [];
 					for (var j = 0; j < numCellsAcross; j++){
 
-						imageData = this._analysisCtx.getImageData( i * aCellSize, j * aCellSize , (i * aCellSize) + aCellSize , (j * aCellSize) + aCellSize ).data;
-						cellAverage = 0;
-						for (var idx = 0; idx < imageData.length; idx += 4){
+						// console.log("sampling : " + (j * aCellSize) + ", " + (i * aCellSize) + " to " + ((j * aCellSize) + aCellSize) + ", " + ((i * aCellSize) + aCellSize));
 
-							cellAverage += imageData[idx];
-							
+						imageData = this._analysisCtx.getImageData( j * aCellSize, i * aCellSize , aCellSize , aCellSize ).data;
+						
+						
+
+						cellAverage = 0;
+						pixelAverage = 0;
+						var channelCount = 0;
+
+						for (var idx = 0; idx < imageData.length; idx+= 4){
+
+							pixelAverage += imageData[idx];
+							pixelAverage += imageData[idx+1];
+							pixelAverage += imageData[idx+2];
+							pixelAverage /= 3;
+
+							cellAverage += pixelAverage;
 						}
-						blockAverages[i][j] = Math.floor(cellAverage / (imageData.length / 4));
+						
+						cellAverage = Math.floor(cellAverage / (imageData.length / 4));
+
+						blockAverages[i][j] = cellAverage;
+
+						ctx.fillStyle = "rgba(" + cellAverage + ", " + 0 + ", " + 0 +  ", 0.5)";
+
+						ctx.fillStyle = (cellAverage > 40) ? "red" : "black";
+
+						ctx.fillRect(j * aCellSize, i * aCellSize , (j * aCellSize) + aCellSize , (i * aCellSize) + aCellSize);
+						ctx.strokeRect(j * aCellSize, i * aCellSize , (j * aCellSize) + aCellSize , (i * aCellSize) + aCellSize);
 						totalAverage += blockAverages[i][j];
 					}	
 
@@ -63,7 +93,7 @@
 				console.log("ImageAverageAnalyser :: Complete, totalAverage : ", totalAverage, " no. of cells : ", this._lastNumberOfCells);
 				this._lastData = blockAverages;
 
-				this._analysisCanvas = null;
+				// this._analysisCanvas = null;
 				this._completeCallback.call(this, this._lastData);
 
 

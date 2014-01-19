@@ -7,7 +7,8 @@
 	<title>Data Generation Test</title>
 
 	<script src="js/retropi/retropi.js"></script>
-	<script src="js/retropi/utils/ImageAverageAnalyser.js"></script>
+	<script src="js/retropi/utils/imageAnalysis/ImageAverageAnalyser.js"></script>
+	<script src="js/retropi/utils/imageAnalysis/DebugImageAnalysisRenderer.js"></script>
 
 	<script>
 
@@ -15,8 +16,38 @@
 
 	document.addEventListener("DOMContentLoaded", function() {
 
-		analyser.analyse("images/uk_city_heat_map.jpg", 64, 100, function() {
-			console.log("analysis complete.");
+		var ImageAverageAnalyser = retropi.getNamespace("utils.imageAnalysis").ImageAverageAnalyser;
+		var DebugImageAnalysisRenderer = retropi.getNamespace("utils.imageAnalysis").DebugImageAnalysisRenderer;
+
+		analyser = new ImageAverageAnalyser();
+
+		renderer = new DebugImageAnalysisRenderer();
+
+		var CELL_SIZE = 32;
+
+		analyser.analyse("images/uk_city_heat_map.jpg", CELL_SIZE, 100, function(aData) {
+			console.log("analysis complete :");
+			console.log(aData);
+
+			var debugCanvas = document.getElementById("debugCanvas");
+			var sourceImage = document.getElementById("srcImage");
+
+			// var lineString = "";
+
+			// for (var i=0; i< aData.length; i++){
+
+			// 	for (var j=0; j < aData[i].length; j++){
+
+			// 		lineString += " " + ((aData[i][j] > 20) ? "1" : "0");
+
+			// 	}
+
+			// 	console.log(lineString);
+			// 	lineString = "";
+
+			// }
+
+		 	renderer.render(sourceImage, debugCanvas, CELL_SIZE, aData);
 
 		})
 				
@@ -36,11 +67,15 @@
 		margin-top:-512px;
 	}
 
+	canvas {
+		opacity:0.5;
+	}
+
 	</style>
 </head>
 <body>
 
-	<img id="srcIMage" src="images/uk_city_heat_map.jpg" width="1024" height="1024"/>
+	<img id="srcImage" src="images/uk_city_heat_map.jpg" width="1024" height="1024"/>
 	<canvas id="debugCanvas" width="1024" height="1024"></canvas>
 
 </body>
