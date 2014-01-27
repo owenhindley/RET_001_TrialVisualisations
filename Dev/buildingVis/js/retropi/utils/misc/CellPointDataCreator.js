@@ -1,6 +1,6 @@
 (function() {
 	
-	retropi.createClass("utils.misc", "CellPointDataCreator", function(aClassObject, aClassPrototype, aClassName){
+	retropi.createClass("utils.misc", "CellPointDataCreator", null, function(aClassObject, aClassPrototype, aClassName){
 
 		var p = aClassPrototype;
 
@@ -10,7 +10,7 @@
 
 		};
 
-		p.createData = function(aSource, aMaxPointsPerCell){
+		p.createData = function(aSource, aMaxPointsPerCell, aRangeConversionFunction){
 
 			var numCellsAcross = aSource[0].length;
 			var numCellsDown = aSource.length;
@@ -25,16 +25,19 @@
 				
 				for (var j=0; j < aSource[i].length; j++){
 
-					numPointsInThisCell = aMaxPointsPerCell * aSource[i][j];
+					if (!aRangeConversionFunction)
+						numPointsInThisCell = aMaxPointsPerCell * aSource[i][j];
+					else
+						numPointsInThisCell = aRangeConversionFunction.call(this, aMaxPointsPerCell, aSource[i][j]);
 
-					refX = i * cellSize;
-					refY = j * cellSize;
+					refY = i * cellSize;
+					refX = j * cellSize;
 
 					for (var k=0; k < numPointsInThisCell; k++){
 
 						var newPoint = {};
-						newPoint.x = refX + (Math.random() * cellSize);
-						newPoint.y = refY + (Math.random() * cellSize);
+						newPoint.x = refX + (this.getGaussianRandomNumber() * cellSize);
+						newPoint.y = refY + (this.getGaussianRandomNumber() * cellSize);
 
 						pointData.push(newPoint);
 
@@ -43,7 +46,22 @@
 				}
 			}
 
+			return pointData;
 
+
+		};
+
+		p.getGaussianRandomNumber = function() {
+
+			var num_components = 2;
+			var normal =0;
+			for(var i=0; i<num_components;i++){
+				normal += Math.random();
+			}
+
+			return normal / num_components;
+
+			// return ((Math.random()*2-1)+(Math.random()*2-1)+(Math.random()*2-1)) * aStandardDeviation + aMean;
 		};
 
 

@@ -48,6 +48,7 @@
 				var cellAverage = 0;
 				var pixelAverage = 0;
 				var totalAverage = 0;
+				var maximumValue = 0;
 				for (var i = 0; i < numCellsDown; i++){
 
 					blockAverages[i] = [];
@@ -77,16 +78,24 @@
 
 						blockAverages[i][j] = cellAverage;
 
-						ctx.fillStyle = "rgba(" + cellAverage + ", " + 0 + ", " + 0 +  ", 0.5)";
+						// ctx.fillStyle = "rgba(" + cellAverage + ", " + 0 + ", " + 0 +  ", 0.5)";
 
-						ctx.fillStyle = (cellAverage > 40) ? "red" : "black";
+						// ctx.fillStyle = (cellAverage > 40) ? "red" : "black";
 
-						ctx.fillRect(j * aCellSize, i * aCellSize , (j * aCellSize) + aCellSize , (i * aCellSize) + aCellSize);
-						ctx.strokeRect(j * aCellSize, i * aCellSize , (j * aCellSize) + aCellSize , (i * aCellSize) + aCellSize);
+						// ctx.fillRect(j * aCellSize, i * aCellSize , (j * aCellSize) + aCellSize , (i * aCellSize) + aCellSize);
+						// ctx.strokeRect(j * aCellSize, i * aCellSize , (j * aCellSize) + aCellSize , (i * aCellSize) + aCellSize);
 						totalAverage += blockAverages[i][j];
+
+						if (maximumValue < blockAverages[i][j]) maximumValue = blockAverages[i][j];
 					}	
 
 				}
+
+				// Normalise to between 0-1
+				for (var i=0; i< numCellsDown;i++)
+					for (var j=0; j < numCellsAcross; j++){
+						blockAverages[i][j] /= maximumValue;												
+					}
 
 				totalAverage /= (numCellsDown * numCellsAcross);
 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<base href="../"/>
+
+	<title>Data Generation Test</title>
+
+	<script src="js/retropi/retropi.js"></script>
+	<script src="js/retropi/utils/imageAnalysis/ImageAverageAnalyser.js"></script>
+	<script src="js/retropi/utils/imageAnalysis/DebugImageAnalysisRenderer.js"></script>
+	<script src="js/retropi/utils/misc/CellPointDataCreator.js"></script>
+
+
+
+	<script>
+
+	var analyser, renderer, cellPointCreator = null;
+
+	document.addEventListener("DOMContentLoaded", function() {
+
+		var CellPointDataCreator = retropi.getNamespace("utils.misc").CellPointDataCreator;
+
+		cellPointCreator = new CellPointDataCreator();
+
+		var debugCanvas = document.getElementById("debugCanvas");
+
+		var pointData = cellPointCreator.createData([[1]], 10000, function(aLimit, aValue){
+			return aLimit;
+		});
+
+
+	 	var debugCtx = debugCanvas.getContext("2d");
+
+	 	debugCtx.fillStyle = "red";
+
+	 	var tX, tY = 0;
+
+	 	for (var i=0; i< pointData.length; i++){
+	 		tX = pointData[i].x * debugCanvas.width;
+	 		tY = pointData[i].y * debugCanvas.height;
+	 		debugCtx.fillRect(tX - 1, tY -1, 2, 2);
+
+	 	}
+
+				
+
+	});
+
+		
+
+	</script>
+
+	<style>
+	body, html {
+		background:black;
+	}
+
+	img, canvas {
+		position: absolute;
+		top:50%;
+		left:50%;
+		margin-left:-512px;
+		margin-top:-512px;
+	}
+
+	canvas {
+		opacity:0.5;
+	}
+
+	</style>
+</head>
+<body>
+
+	<!-- <img id="srcImage" src="images/uk_city_heat_map.jpg" width="1024" height="1024"/> -->
+	<canvas id="debugCanvas" width="1024" height="1024"></canvas>
+
+</body>
+</html>
