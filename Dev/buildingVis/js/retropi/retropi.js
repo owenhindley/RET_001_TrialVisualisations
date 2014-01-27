@@ -16,14 +16,27 @@
 
 
 
-	retropi.createClass = function(aNamespace, aClassName, aDefinitionFunction){
+	retropi.createClass = function(aNamespace, aClassName, aInheritedClass, aDefinitionFunction){
 
 		var namespace = retropi.getNamespace(aNamespace);
-		namespace[aClassName] = function() {};
+		if (!namespace[aClassName]){
+
+			namespace[aClassName] = function() {};	
+
+		} else {
+			throw new Error("retropi.js :: Class " + aClassName + " already defined in namespace " + aNamespace);
+		}
+
 		var classObject = namespace[aClassName];
+
+
+		if (aInheritedClass){
+			classObject.prototype = new aInheritedClass();
+		}
+		
 		var prototype = namespace[aClassName].prototype;
 
-		aDefinitionFunction.call(this, classObject, prototype, aClassName);
+		aDefinitionFunction.call(this, classObject, prototype, aClassName, aInheritedClass);
 
 	};
 

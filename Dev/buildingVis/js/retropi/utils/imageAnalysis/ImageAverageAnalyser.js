@@ -1,6 +1,6 @@
 (function() {
 	
-	retropi.createClass("utils.imageAnalysis", "ImageAverageAnalyser", function(aClassObject, aClassPrototype, aClassName){
+	retropi.createClass("utils.imageAnalysis", "ImageAverageAnalyser", null, function(aClassObject, aClassPrototype, aClassName){
 
 		var p = aClassPrototype;
 
